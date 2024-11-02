@@ -35,7 +35,7 @@ public class Comp1Tele extends LinearOpMode {
     public double elbowDown = 0;
     public double elbowUp = 500;
     public double clawOpen = 0;
-
+    public double clawClosed = 0;
  @Override
     public void runOpMode() throws InterruptedException {
 
