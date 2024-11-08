@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="Comp 1 TeleOp")
+@TeleOp(name="LM1 TeleOp")
 //@Disabled
 
 public class Comp1Tele extends LinearOpMode {
@@ -25,20 +25,112 @@ public class Comp1Tele extends LinearOpMode {
     hwmap robot = new hwmap();
 
     ElapsedTime toggleTimer = new ElapsedTime();
-    public double slowMode = .3;
-    public double fastMode = 1;
-    public int lowLift = 0;
-    public int mediumLift = 700;
-    public int highLift = 1200;
-    public int tiltUp = 0;
-    public int tiltDown = -300;
-    public double elbowDown = 0;
-    public double elbowUp = 500;
-    public double clawOpen = 0;
-    public double clawClosed = 0;
- @Override
-    public void runOpMode() throws InterruptedException {
 
- }
+    public double speed = 1.0;      //Speed of the robot, either base speed at 1.0 or slow speed at 0.3
+    public int lowV = 0;         //Vertical arm fully retracted
+    public int mediumV = 700;    //Vertical arm around halfway extended (Low Basket)
+    public int highV = 1200;     //Vertical arm fully extended (High Basket)
+    public int inH = 0;
+    public int outH = 600;
+    public double elbowDown = 0;    //Moves with lifts (fully retracted)
+    public double elbowUp = 500;    //Moves with lifts (extended)
+    public double clawOpen = 0;     //Closes to grab samples (Open)
+    public double clawClosed = 0.18;   //Closes to grab samples (Closed)
 
+    public static double p = .006, i = 0, d = 0.0;
+    public static double f = .05;
+
+    public static int LiftTarget = 0; // target position
+    public PIDController controller;
+
+    enum Slides {
+        NO_SLIDES,
+        H_SLIDE,
+        V_SLIDE,
     }
+
+    double wait = 1;
+    ElapsedTime timer = new ElapsedTime();
+
+    @Override
+    public void runOpMode() throws InterruptedException {
+        robot.init(hardwareMap);
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+        waitForStart();
+        while (opModeIsActive()) {
+
+            telemetry.addData("Status", "Running");
+            telemetry.update();
+
+            Slides slides = Slides.NO_SLIDES;
+
+            robot.leftFront.setPower((-gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x) * speed);
+            robot.rightFront.setPower((-gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x) * speed);
+            robot.leftBack.setPower((-gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x) * speed);
+            robot.rightBack.setPower((-gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x) * speed);
+
+            if (gamepad1.left_trigger == 1) {
+                robot.LLarm.setPower(-0.1);
+                robot.LRarm.setPower(-0.1);
+            } else if (gamepad1.right_trigger == 1) {
+                robot.LLarm.setPower(0.1);
+                robot.LRarm.setPower(0.1);
+            } else {
+                robot.LLarm.setPower(0);
+                robot.LRarm.setPower(0);
+            }
+            if (gamepad1.left_bumper)
+                robot.Harm.setPower(-0.1);
+            else if (gamepad1.right_bumper)
+                robot.Harm.setPower(0.1);
+            else
+                robot.Harm.setPower(0);
+               class Lift {
+                  public Lift(HardwareMap hardwareMap) {
+            // Beep boop this is the the constructor for the lift
+            // Assume this sets up the lift hardware
+                      robot.LLarm = hardwareMap.get(DcMotorEx.class,"LL");
+                      robot.LRarm = hardwareMap.get(DcMotorEx.class,"LR");
+
+                      robot.LLarm.setDirection(DcMotor.Direction.FORWARD);
+                      robot.LRarm.setDirection(DcMotor.Direction.REVERSE);
+
+                      robot.LLarm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                      robot.LRarm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+                      robot.LLarm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                      robot.LRarm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+                     controller = new PIDController(p, i, d);
+
+                  }
+
+                 public void update() {
+            // Beep boop this is the lift update function
+            // Assume this runs some PID controller for the lift
+
+                  controller.setPID(p, i, d);
+
+
+                  int LLarmPos = robot.LLarm.getCurrentPosition();
+                  int LRarmPos = robot.LRarm.getCurrentPosition();
+
+
+                   double LLarmPID = controller.calculate(LLarmPos, LiftTarget);
+                   double LRarmPID = controller.calculate(LRarmPos, LiftTarget);
+
+
+
+                   double LLPower = LLarmPID + f;
+                   double LRPower = LRarmPID + f;
+
+                  robot.LLarm.setPower(LLPower);
+                  robot.LRarm.setPower(LRPower);
+                }
+             }
+        }
+    }
+}
+
+

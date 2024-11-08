@@ -29,6 +29,7 @@ package org.firstinspires.ftc.teamcode;
  */
 
 import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -67,14 +68,13 @@ public class hwmap
     public DcMotor rightFront = null;
     public DcMotor leftBack = null;
     public DcMotor rightBack = null;
-    public DcMotorEx larm = null;
-    public DcMotorEx rarm = null;
-    public DcMotorEx tiltMotor = null;
+    public DcMotorEx Harm = null;
+    public DcMotorEx LLarm = null;
+    public DcMotorEx LRarm = null;
 
-    public Servo grab  = null;
+    public Servo grab = null;
     public Servo wrist = null;
-    public Servo lelbow  = null;
-    public Servo relbow = null;
+
 
 
     private VoltageSensor batteryVoltageSensor;
@@ -93,58 +93,57 @@ public class hwmap
     /* Initialize standard Hardware interfaces */
     public void init(HardwareMap ahwMap) {
         // Save reference to Hardware map
+
+
         hwMap = ahwMap;
 
         batteryVoltageSensor = hwMap.voltageSensor.iterator().next();
 
         // Define and Initialize Motors
-        tiltMotor = hwMap.get(DcMotorEx.class, "tilt");
-        leftFront  = hwMap.get(DcMotor.class, "lf"); //0
-        rightFront = hwMap.get(DcMotor.class, "rf"); //2
-        leftBack  = hwMap.get(DcMotor.class, "lb"); //1
-        rightBack = hwMap.get(DcMotor.class, "rb"); //3
-        larm  = hwMap.get(DcMotorEx.class, "Llift"); //0 ex
-        rarm = hwMap.get(DcMotorEx.class, "Rlift");
+        leftFront  = hwMap.get(DcMotor.class, "lf");
+        rightFront = hwMap.get(DcMotor.class, "rf");
+        leftBack  = hwMap.get(DcMotor.class, "lb");
+        rightBack = hwMap.get(DcMotor.class, "rb");
+        Harm  = hwMap.get(DcMotorEx.class, "harm");
+        LLarm  = hwMap.get(DcMotorEx.class, "ll");
+        LRarm = hwMap.get(DcMotorEx.class, "lr");
 
         grab = hwMap.get(Servo.class, "grab");
         wrist = hwMap.get(Servo.class, "wrist");
-        lelbow = hwMap.get(Servo.class, "LE");
-        relbow = hwMap.get(Servo.class, "RE");
 
-        motors =  Arrays.asList(larm, rarm );
-        tiltMotor.setDirection(DcMotor.Direction.FORWARD);
         leftFront.setDirection(DcMotor.Direction.REVERSE);
         rightFront.setDirection(DcMotor.Direction.FORWARD);
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         rightBack.setDirection(DcMotor.Direction.FORWARD);
-        larm.setDirection(DcMotor.Direction.REVERSE);
-        rarm.setDirection(DcMotor.Direction.FORWARD);
+        Harm.setDirection(DcMotor.Direction.REVERSE);
+        LLarm.setDirection(DcMotor.Direction.FORWARD);
+        LRarm.setDirection(DcMotor.Direction.REVERSE);
 
-        tiltMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        larm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rarm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        Harm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        LLarm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        LRarm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         leftFront.setPower(0);
         rightFront.setPower(0);
         leftBack.setPower(0);
         rightBack.setPower(0);
-        larm.setPower(0);
-        rarm.setPower(0);
-        tiltMotor.setPower(0);
-
+        Harm.setPower(0);
+        LLarm.setPower(0);
+        LRarm.setPower(0);
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        larm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rarm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        tiltMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Harm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LLarm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LRarm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
     }
 }
