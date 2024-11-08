@@ -72,8 +72,8 @@ public class hwmap
     public DcMotorEx LLarm = null;
     public DcMotorEx LRarm = null;
 
-    public Servo grab = null;
-    public Servo wrist = null;
+  //  public Servo grab = null;
+  //  public Servo wrist = null;
 
 
 
@@ -108,14 +108,14 @@ public class hwmap
         LLarm  = hwMap.get(DcMotorEx.class, "ll");
         LRarm = hwMap.get(DcMotorEx.class, "lr");
 
-        grab = hwMap.get(Servo.class, "grab");
-        wrist = hwMap.get(Servo.class, "wrist");
+       // grab = hwMap.get(Servo.class, "grab");
+      //  wrist = hwMap.get(Servo.class, "wrist");
 
         leftFront.setDirection(DcMotor.Direction.REVERSE);
-        rightFront.setDirection(DcMotor.Direction.FORWARD);
-        leftBack.setDirection(DcMotor.Direction.REVERSE);
-        rightBack.setDirection(DcMotor.Direction.FORWARD);
-        Harm.setDirection(DcMotor.Direction.REVERSE);
+        rightFront.setDirection(DcMotor.Direction.REVERSE);
+        leftBack.setDirection(DcMotor.Direction.FORWARD);
+        rightBack.setDirection(DcMotor.Direction.REVERSE);
+        Harm.setDirection(DcMotor.Direction.FORWARD);
         LLarm.setDirection(DcMotor.Direction.FORWARD);
         LRarm.setDirection(DcMotor.Direction.REVERSE);
 

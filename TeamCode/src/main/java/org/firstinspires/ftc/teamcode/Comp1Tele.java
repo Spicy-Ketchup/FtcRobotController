@@ -27,20 +27,11 @@ public class Comp1Tele extends LinearOpMode {
     ElapsedTime toggleTimer = new ElapsedTime();
 
     public double speed = 1.0;      //Speed of the robot, either base speed at 1.0 or slow speed at 0.3
-    public int lowV = 0;         //Vertical arm fully retracted
-    public int mediumV = 700;    //Vertical arm around halfway extended (Low Basket)
-    public int highV = 1200;     //Vertical arm fully extended (High Basket)
-    public int inH = 0;
-    public int outH = 600;
-    public double elbowDown = 0;    //Moves with lifts (fully retracted)
-    public double elbowUp = 500;    //Moves with lifts (extended)
-    public double clawOpen = 0;     //Closes to grab samples (Open)
-    public double clawClosed = 0.18;   //Closes to grab samples (Closed)
 
     public static double p = .006, i = 0, d = 0.0;
-    public static double f = .05;
 
     public static int LiftTarget = 0; // target position
+    public static int ClawTarget = 0;
     public PIDController controller;
 
     enum Slides {
@@ -57,6 +48,7 @@ public class Comp1Tele extends LinearOpMode {
         robot.init(hardwareMap);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+        Lift lift = new Lift(hardwareMap);
         waitForStart();
         while (opModeIsActive()) {
 
@@ -70,37 +62,45 @@ public class Comp1Tele extends LinearOpMode {
             robot.leftBack.setPower((-gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x) * speed);
             robot.rightBack.setPower((-gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x) * speed);
 
-            if (gamepad1.left_trigger == 1) {
-                robot.LLarm.setPower(-0.1);
-                robot.LRarm.setPower(-0.1);
-            } else if (gamepad1.right_trigger == 1) {
-                robot.LLarm.setPower(0.1);
-                robot.LRarm.setPower(0.1);
-            } else {
-                robot.LLarm.setPower(0);
-                robot.LRarm.setPower(0);
-            }
-            if (gamepad1.left_bumper)
-                robot.Harm.setPower(-0.1);
-            else if (gamepad1.right_bumper)
-                robot.Harm.setPower(0.1);
-            else
-                robot.Harm.setPower(0);
+            speed = gamepad1.a && speed == 1.0 ? .1 : gamepad1.a && speed == .1 ? .1 : speed;
+            telemetry.addData("speed: ", speed);
+
+
+   if (gamepad1.dpad_left)
+       LiftTarget = 300;
+   else if (gamepad1.dpad_down)
+       LiftTarget = 0;
+   else if (gamepad1.dpad_right)
+       LiftTarget = 600;
+   else if (gamepad1.dpad_up)
+       LiftTarget = 900;
+
+        if (gamepad1.left_trigger > .8)
+            ClawTarget = -55;
+        else if (gamepad1.right_trigger > .8)
+            ClawTarget = 880;
+        lift.update();
+        }
+    }
                class Lift {
                   public Lift(HardwareMap hardwareMap) {
             // Beep boop this is the the constructor for the lift
             // Assume this sets up the lift hardware
-                      robot.LLarm = hardwareMap.get(DcMotorEx.class,"LL");
-                      robot.LRarm = hardwareMap.get(DcMotorEx.class,"LR");
+                      robot.LLarm = hardwareMap.get(DcMotorEx.class,"ll");
+                      robot.LRarm = hardwareMap.get(DcMotorEx.class,"lr");
+                      robot.Harm = hardwareMap.get(DcMotorEx.class, "harm");
 
                       robot.LLarm.setDirection(DcMotor.Direction.FORWARD);
                       robot.LRarm.setDirection(DcMotor.Direction.REVERSE);
+                      robot.Harm.setDirection(DcMotor.Direction.FORWARD);
 
                       robot.LLarm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                       robot.LRarm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                      robot.Harm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
                       robot.LLarm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                       robot.LRarm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                      robot.Harm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
                      controller = new PIDController(p, i, d);
 
@@ -115,22 +115,28 @@ public class Comp1Tele extends LinearOpMode {
 
                   int LLarmPos = robot.LLarm.getCurrentPosition();
                   int LRarmPos = robot.LRarm.getCurrentPosition();
+                  int HarmPos = robot.Harm.getCurrentPosition();
 
 
                    double LLarmPID = controller.calculate(LLarmPos, LiftTarget);
                    double LRarmPID = controller.calculate(LRarmPos, LiftTarget);
+                   double HarmPID = controller.calculate(HarmPos, ClawTarget);
 
 
 
-                   double LLPower = LLarmPID + f;
-                   double LRPower = LRarmPID + f;
+                   double LLPower = LLarmPID;
+                   double LRPower = LRarmPID;
+                   double HarmPower = HarmPID;
 
                   robot.LLarm.setPower(LLPower);
                   robot.LRarm.setPower(LRPower);
+                  robot.Harm.setPower(HarmPower);
+                  telemetry.addData("lift: ",LiftTarget);
+                  telemetry.addData("lift power: ", LLPower);
+                  telemetry.addData("Lift Pos: ", robot.LLarm.getCurrentPosition());
+                  telemetry.addData("Claw Pos: ", robot.Harm.getCurrentPosition());
                 }
              }
         }
-    }
-}
 
 
