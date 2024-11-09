@@ -72,8 +72,10 @@ public class hwmap
     public DcMotorEx LLarm = null;
     public DcMotorEx LRarm = null;
 
-  //  public Servo grab = null;
-  //  public Servo wrist = null;
+    public Servo claw = null;
+    public Servo wrist = null;
+    public Servo elbow = null;
+    public Servo bucket = null;
 
 
 
@@ -108,8 +110,10 @@ public class hwmap
         LLarm  = hwMap.get(DcMotorEx.class, "ll");
         LRarm = hwMap.get(DcMotorEx.class, "lr");
 
-       // grab = hwMap.get(Servo.class, "grab");
-      //  wrist = hwMap.get(Servo.class, "wrist");
+       claw = hwMap.get(Servo.class, "claw");
+        wrist = hwMap.get(Servo.class, "wrist");
+        elbow = hwMap.get(Servo.class, "elbow");
+        bucket = hwMap.get(Servo.class, "bucket");
 
         leftFront.setDirection(DcMotor.Direction.REVERSE);
         rightFront.setDirection(DcMotor.Direction.REVERSE);
@@ -118,6 +122,8 @@ public class hwmap
         Harm.setDirection(DcMotor.Direction.FORWARD);
         LLarm.setDirection(DcMotor.Direction.FORWARD);
         LRarm.setDirection(DcMotor.Direction.REVERSE);
+
+        bucket.setDirection(Servo.Direction.REVERSE);
 
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

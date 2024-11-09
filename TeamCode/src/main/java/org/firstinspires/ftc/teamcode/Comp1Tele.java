@@ -24,8 +24,6 @@ public class Comp1Tele extends LinearOpMode {
 
     hwmap robot = new hwmap();
 
-    ElapsedTime toggleTimer = new ElapsedTime();
-
     public double speed = 1.0;      //Speed of the robot, either base speed at 1.0 or slow speed at 0.3
 
     public static double p = .006, i = 0, d = 0.0;
@@ -34,14 +32,6 @@ public class Comp1Tele extends LinearOpMode {
     public static int ClawTarget = 0;
     public PIDController controller;
 
-    enum Slides {
-        NO_SLIDES,
-        H_SLIDE,
-        V_SLIDE,
-    }
-
-    double wait = 1;
-    ElapsedTime timer = new ElapsedTime();
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -55,7 +45,6 @@ public class Comp1Tele extends LinearOpMode {
             telemetry.addData("Status", "Running");
             telemetry.update();
 
-            Slides slides = Slides.NO_SLIDES;
 
             robot.leftFront.setPower((-gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x) * speed);
             robot.rightFront.setPower((-gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x) * speed);
@@ -75,10 +64,25 @@ public class Comp1Tele extends LinearOpMode {
    else if (gamepad1.dpad_up)
        LiftTarget = 900;
 
-        if (gamepad1.left_trigger > .8)
+   if (gamepad1.left_trigger > 0.8){
+       robot.claw.setPosition(0);
+   } else if (gamepad1.right_trigger > 0.8){
+       robot.claw.setPosition(.3);
+   }
+
+
+
+   if (gamepad2.left_bumper) {
+       robot.bucket.setPosition(0.5);
+   } else if (gamepad2.right_bumper){
+       robot.bucket.setPosition(0.9);
+   }
+
+        if (gamepad2.left_trigger > .8)
             ClawTarget = -55;
-        else if (gamepad1.right_trigger > .8)
+        else if (gamepad2.right_trigger > .8)
             ClawTarget = 880;
+
         lift.update();
         }
     }
