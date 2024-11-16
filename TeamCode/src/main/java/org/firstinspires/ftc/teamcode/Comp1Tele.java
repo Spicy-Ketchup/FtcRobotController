@@ -39,6 +39,7 @@ public class Comp1Tele extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         Lift lift = new Lift(hardwareMap);
+        robot.elbow.setPosition(.7);
         waitForStart();
         while (opModeIsActive()) {
 
@@ -51,36 +52,44 @@ public class Comp1Tele extends LinearOpMode {
             robot.leftBack.setPower((-gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x) * speed);
             robot.rightBack.setPower((-gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x) * speed);
 
-            speed = gamepad1.a && speed == 1.0 ? .1 : gamepad1.a && speed == .1 ? .1 : speed;
+         //   speed = gamepad1.a && speed == 1.0 ? .1 : gamepad1.a && speed == .1 ? .1 : speed;
             telemetry.addData("speed: ", speed);
 
 
-   if (gamepad1.dpad_left)
-       LiftTarget = 300;
-   else if (gamepad1.dpad_down)
+  if (gamepad1.dpad_down)
        LiftTarget = 0;
    else if (gamepad1.dpad_right)
-       LiftTarget = 600;
+       LiftTarget = 2300;
    else if (gamepad1.dpad_up)
-       LiftTarget = 900;
+       LiftTarget = 3200;
 
-   if (gamepad1.left_trigger > 0.8){
-       robot.claw.setPosition(0);
-   } else if (gamepad1.right_trigger > 0.8){
-       robot.claw.setPosition(.3);
+   if (gamepad2.left_trigger > 0.8){
+       robot.claw.setPosition(.6);
+   } else if (gamepad2.right_trigger > 0.8){
+       robot.claw.setPosition(1.0);
+   }
+   if (gamepad2.a && robot.elbow.getPosition() > .4)
+       robot.elbow.setPosition(.12);
+   else if (gamepad2.a && robot.elbow.getPosition() < .2)
+       robot.elbow.setPosition(.95);
+   else if (gamepad2.b)
+       robot.elbow.setPosition(.7);
+
+
+   if (gamepad2.x)
+       robot.wrist.setPosition(.9);
+   else if (gamepad2.y)
+        robot.wrist.setPosition(.3);
+
+   if (gamepad1.left_trigger > .8) {
+       robot.bucket.setPosition(0.1);
+   } else if (gamepad1.right_trigger> .8){
+       robot.bucket.setPosition(0.8);
    }
 
-
-
-   if (gamepad2.left_bumper) {
-       robot.bucket.setPosition(0.5);
-   } else if (gamepad2.right_bumper){
-       robot.bucket.setPosition(0.9);
-   }
-
-        if (gamepad2.left_trigger > .8)
+        if (gamepad2.left_bumper)
             ClawTarget = -55;
-        else if (gamepad2.right_trigger > .8)
+        else if (gamepad2.right_bumper)
             ClawTarget = 880;
 
         lift.update();
