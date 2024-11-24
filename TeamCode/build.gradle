@@ -11,6 +11,7 @@
 
 // Custom definitions may go here
 
+
 // Include common definitions from above.
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
@@ -23,6 +24,16 @@ android {
     }
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+repositories {
+    maven { url = 'https://jitpack.io' }
+    maven { url = 'https://maven.brott.dev/' }
+}
+
 dependencies {
     implementation project(':FtcRobotController')
 
@@ -31,7 +42,10 @@ dependencies {
     implementation "com.acmerobotics.roadrunner:actions:1.0.0"
     implementation "com.acmerobotics.dashboard:dashboard:0.4.16"
     implementation 'org.ftclib.ftclib:core:2.1.1'
+    implementation 'com.github.rh-robotics:MeepMeep:v1.0.0'
+    implementation project(':FtcRobotController')
 }
+
 repositories {
     maven {
         url = 'https://maven.brott.dev/'

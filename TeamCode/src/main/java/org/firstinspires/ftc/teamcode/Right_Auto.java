@@ -1,7 +1,12 @@
 package org.firstinspires.ftc.teamcode;
+
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /*
@@ -36,22 +41,41 @@ public class Right_Auto extends LinearOpMode{
         //initialize hardwaremap from above
         robot.init(hardwareMap);
 
-        /*
-            Telemetry will be your best friend when troubleshooting.
-            It can output sensor input/output, encoder values, timing, and much more.
-        */
+        Pose2d initialPose = new Pose2d(0, 0, Math.toRadians(0));
+        MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
+
         telemetry.addData("Mode", "waiting");
         telemetry.update();
-
-        //wait for start button.
         waitForStart();
 
         telemetry.addData("Mode", "running");
         telemetry.update();
 
 
+
+        TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
+                .turnTo(45);
+
+        Action trajectoryActionCloseOut = tab1.endTrajectory().fresh()
+                .build();
+
+        waitForStart();
+
+        Actions.runBlocking(
+                new SequentialAction(tab1.build())
+        );
+
+        /** RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
+                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
+                .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
+                .followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
+                        .forward(30)
+                        .turn(Math.toRadians(90))
+                        .build());
+
         //This is where your actual autonomous code will go.
-        DriveForward(800, 0.5);
+
+
         /*
             Example of using an encoder:
                 leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -67,23 +91,4 @@ public class Right_Auto extends LinearOpMode{
         }*/
     }
 
-    public void DriveForward(long mseconds, double power) throws InterruptedException {
-        //encoder position that you want the motor to run to.  (1 full rotation = 537.7)
-
-
-        robot.leftFront.setPower(power); //power is between -1.0 and 1.0
-        robot.leftBack.setPower(power); //power is between -1.0 and 1.0
-        robot.rightFront.setPower(power); //power is between -1.0 and 1.0
-        robot.rightBack.setPower(power); //power is between -1.0 and 1.0
-
-        //while motor hasn't reached position and opMode is still running, do nothing else
- wait(mseconds);
-
-        //once motor has reached target encoder position, stop the motor.
-        robot.leftFront.setPower(0);
-        robot.leftBack.setPower(0);
-        robot.rightFront.setPower(0);
-        robot.rightBack.setPower(0);
-
-    }
 }

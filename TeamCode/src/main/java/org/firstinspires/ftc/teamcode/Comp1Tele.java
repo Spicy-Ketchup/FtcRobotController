@@ -55,7 +55,7 @@ public class Comp1Tele extends LinearOpMode {
          //   speed = gamepad1.a && speed == 1.0 ? .1 : gamepad1.a && speed == .1 ? .1 : speed;
             telemetry.addData("speed: ", speed);
 
-
+//comment
   if (gamepad1.dpad_down)
        LiftTarget = 0;
    else if (gamepad1.dpad_right)
