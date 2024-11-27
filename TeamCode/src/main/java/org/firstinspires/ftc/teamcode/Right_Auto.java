@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -54,7 +55,8 @@ public class Right_Auto extends LinearOpMode{
 
 
         TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
-                .turnTo(45);
+                .splineTo(new Vector2d(30, 30), Math.toRadians(90));
+
 
         Action trajectoryActionCloseOut = tab1.endTrajectory().fresh()
                 .build();
