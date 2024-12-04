@@ -1,9 +1,4 @@
 package org.firstinspires.ftc.teamcode;
-/*
- * Some declarations that are boilerplate are
- * skipped for the sake of brevity.
- * Since there are no real values to use, named constants will be used.
- */
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -111,9 +106,9 @@ public class Comp1Tele extends LinearOpMode {
                       robot.LRarm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                       robot.Harm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-                      robot.LLarm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                      robot.LRarm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                      robot.Harm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                      robot.LLarm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                      robot.LRarm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                      robot.Harm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
                      controller = new PIDController(p, i, d);
 

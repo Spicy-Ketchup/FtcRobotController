@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
@@ -19,9 +20,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 //@Disabled
 public class Right_Auto extends LinearOpMode{
 
-    public static int LTarget = 0;
     public PIDController Controller;
     public static double p = .006, i = 0, d = 0.0;
+    int LT = 0;
 
     public class Lift {
         private DcMotorEx LL;
@@ -34,38 +35,34 @@ public class Right_Auto extends LinearOpMode{
             LR.setDirection(DcMotor.Direction.REVERSE);
             LL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             LR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            LL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            LR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            LL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            LR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
             Controller = new PIDController(p, i, d);
         }
 
         public void update() {
-            // Beep boop this is the lift update function
-            // Assume this runs some PID controller for the lift
-
             Controller.setPID(p, i, d);
 
 
-            int LLPos = LL.getCurrentPosition();
-            int LRPos = LR.getCurrentPosition();
+            int Pos = (LL.getCurrentPosition()+LR.getCurrentPosition())/2;
 
 
 
-            double LLarmPID = Controller.calculate(LLPos, LTarget);
-            double LRarmPID = Controller.calculate(LRPos, LTarget);
+            double LPID = Controller.calculate(Pos, LT);
 
 
-            double LLPower = LLarmPID;
-            double LRPower = LRarmPID;
+            double LPower = LPID;
 
-            LL.setPower(LLPower);
-            LR.setPower(LRPower);
+            LL.setPower(LPower);
+            LR.setPower(LPower);
         }
     }
+
+
     @Override
     public void runOpMode() throws InterruptedException {
-
+        Lift AutoLift = new Lift(hardwareMap);
         Pose2d initialPose = new Pose2d(0, 0, 0);
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
 
@@ -77,30 +74,61 @@ public class Right_Auto extends LinearOpMode{
         telemetry.update();
 
 
-
-        TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
-                .strafeToLinearHeading(new Vector2d(10,17),Math.toRadians(-34))
-                .waitSeconds(2.5)
-                .strafeToLinearHeading(new Vector2d(21,7),Math.toRadians(-4))
-                .waitSeconds(1.5)
-                .strafeToLinearHeading(new Vector2d(13,15),Math.toRadians(-34))
-                .waitSeconds(2.5)
-                .strafeToLinearHeading(new Vector2d(20,23),Math.toRadians(-5))
-                .waitSeconds(1.5)
-                .strafeToLinearHeading(new Vector2d(9,17),Math.toRadians(-35))
-                .waitSeconds(2.5)
-                .strafeToLinearHeading(new Vector2d(21.5,18.5),Math.toRadians(24))
-                .waitSeconds(1.5)
-                .strafeToLinearHeading(new Vector2d(8.5,12.5),Math.toRadians(-29))
-                .waitSeconds(2.5)
-                .strafeToLinearHeading(new Vector2d(55,0),Math.toRadians(87))
-                .strafeToConstantHeading(new Vector2d(55,-24));
-
-
-        Action trajectoryAction = tab1.build();
-
             Actions.runBlocking(
-                    new SequentialAction(trajectoryAction));
+
+                            new ParallelAction(
+                                    (p) -> {
+                                        AutoLift.update();
+                                        return true;
+                                    },
+                                    new SequentialAction(
+                            drive.actionBuilder(initialPose)
+                                    .strafeToLinearHeading(new Vector2d(10,17),Math.toRadians(-34))
+                                    .build(),
+                                    (p) -> {LT=300; return false;},
+                                            drive.actionBuilder(drive.pose)
+                                                    .waitSeconds(2.5)
+                                                    .build(),
+                                    (p) -> {LT=50; return false;},
+                            drive.actionBuilder(drive.pose)
+                                    .strafeToLinearHeading(new Vector2d(21,7),Math.toRadians(-4))
+                                    .waitSeconds(1.5)
+                                    .strafeToLinearHeading(new Vector2d(13,15),Math.toRadians(-34))
+                                    .build(),
+                                    (p) -> {LT=300; return false;},
+                                            drive.actionBuilder(drive.pose)
+                                                    .waitSeconds(2.5)
+                                                    .build(),
+                                    (p) -> {LT=50; return false;},
+                            drive.actionBuilder(drive.pose)
+                                    .strafeToLinearHeading(new Vector2d(20,23),Math.toRadians(-5))
+                                    .waitSeconds(1.5)
+                                    .strafeToLinearHeading(new Vector2d(9,17),Math.toRadians(-35))
+                                    .build(),
+                                    (p) -> {LT=300; return false;},
+                                            drive.actionBuilder(drive.pose)
+                                                    .waitSeconds(2.5)
+                                                    .build(),
+                                    (p) -> {LT=50; return false;},
+                            drive.actionBuilder(drive.pose)
+                                    .strafeToLinearHeading(new Vector2d(21.5,18.5),Math.toRadians(24))
+                                    .waitSeconds(1.5)
+                                    .strafeToLinearHeading(new Vector2d(8.5,12.5),Math.toRadians(-29))
+                                    .build(),
+                                    (p) -> {LT=500; return false;},
+                                            drive.actionBuilder(drive.pose)
+                                                    .waitSeconds(2.5)
+                                                    .build(),
+                                    (p) -> {LT=50; return false;},
+                            drive.actionBuilder(drive.pose)
+                                    .strafeToLinearHeading(new Vector2d(55,0),Math.toRadians(87))
+                                    .build(),
+                            new ParallelAction(
+                                    drive.actionBuilder(drive.pose)
+                                            .strafeToLinearHeading(new Vector2d(55,0),Math.toRadians(87))
+                                            .build(),
+                                    (p) -> {LT=500; return false;}))
+                    ));
 
     }
 
