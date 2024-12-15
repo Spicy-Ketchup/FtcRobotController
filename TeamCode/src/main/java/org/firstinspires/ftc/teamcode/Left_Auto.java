@@ -25,11 +25,9 @@ public class Left_Auto extends LinearOpMode{
     double clawOpen = 0.3;
     double clawClose = 0.7;
     double wristGrab = 0.55;
-    double wristGrabFinal = 0.62;
     double wristNeutral = 0.4;
     double wristBucket = 0;
     double elbowGrab = 0.147;
-    double elbowGrabFinal = 0.15;
     double elbowNeutral = 0.7;
     double elbowBucket = 0.82;
     double bucketScore = 0;
@@ -149,110 +147,111 @@ public class Left_Auto extends LinearOpMode{
                                             (p) -> {LT=50; return false;},
                                             (p) -> {bucket.setPosition(bucketNeutral); return false;},
                                             drive.actionBuilder(new Pose2d(10,17,Math.toRadians(-34)))
-                                    .strafeToLinearHeading(new Vector2d(14.8,10.7),Math.toRadians(-10))
+                                    .strafeToLinearHeading(new Vector2d(14.4,11),Math.toRadians(-10))
                                     .build(),
                                             (p) -> {HT=900; return false;},
                                             (p) -> {claw.setPosition(clawOpen); return false;},
-                                            drive.actionBuilder(new Pose2d(14.8,10.7,Math.toRadians(-10)))
+                                            drive.actionBuilder(new Pose2d(14.4,11,Math.toRadians(-10)))
                                                     .waitSeconds(.3)
                                                     .build(),
                                             (p) -> {wrist.setPosition(wristGrab); return false;},
                                             (p) -> {elbow.setPosition(elbowGrab); return false;},
-                                            drive.actionBuilder(new Pose2d(14.8,10.7,Math.toRadians(-10)))
+                                            drive.actionBuilder(new Pose2d(14.4,11,Math.toRadians(-10)))
                                     .waitSeconds(.5)
                                     .build(),
                                             (p) -> {claw.setPosition(clawClose); return false;},
-                                            drive.actionBuilder(new Pose2d(14.8,10.7,Math.toRadians(-10)))
+                                            drive.actionBuilder(new Pose2d(14.4,11,Math.toRadians(-10)))
                                                     .waitSeconds(.2)
                                                     .build(),
                                             (p) -> {elbow.setPosition(elbowBucket); return false;},
                                             (p) -> {wrist.setPosition(wristBucket); return false;},
-                                            drive.actionBuilder(new Pose2d(14.8,10.7,Math.toRadians(-10)))
+                                            drive.actionBuilder(new Pose2d(14.4,11,Math.toRadians(-10)))
                                                     .waitSeconds(.3)
                                                     .build(),
                                             (p) -> {HT = 5; return false;},
-                                            drive.actionBuilder(new Pose2d(14.8,10.7,Math.toRadians(-10)))
+                                            drive.actionBuilder(new Pose2d(14.4,11,Math.toRadians(-10)))
                                                     .waitSeconds(.65)
                                                     .build(),
                                             (p) -> {claw.setPosition(clawOpen); return false;},
-                                            drive.actionBuilder(new Pose2d(14.8,10.7,Math.toRadians(-10)))
+                                            drive.actionBuilder(new Pose2d(14.4,11,Math.toRadians(-10)))
                                                     .waitSeconds(.4)
                                                     .build(),
                                             (p) -> {elbow.setPosition(elbowNeutral); return false;},
                                             (p) -> {wrist.setPosition(wristNeutral); return false;},
                                             (p) -> {claw.setPosition(clawClose); return false;},
-                                            drive.actionBuilder(new Pose2d(14.8,10.7,Math.toRadians(-10)))
+                                            drive.actionBuilder(new Pose2d(14.4,11,Math.toRadians(-10)))
                                                     .waitSeconds(0.5)
-                                                    .strafeToLinearHeading(new Vector2d(9,15.5),Math.toRadians(-33))
+                                                    .strafeToLinearHeading(new Vector2d(9.7,13.5),Math.toRadians(-33))
                                                  .build(),
                                     (p) -> {LT=2600; return false;},   //here
-                                            drive.actionBuilder(new Pose2d(9,15.5,Math.toRadians(-33)))
+                                            drive.actionBuilder(new Pose2d(9.7,13.5,Math.toRadians(-33)))
                                                     .waitSeconds(1)
                                                     .build(),
                                             (p) -> {bucket.setPosition(bucketScore); return false;},
-                                            drive.actionBuilder(new Pose2d(9,15.5,Math.toRadians(-33)))
+                                            drive.actionBuilder(new Pose2d(9.7,13.5,Math.toRadians(-33)))
                                                     .waitSeconds(1)
                                                     .build(),
                                             (p) -> {LT=50; return false;},
                                             (p) -> {bucket.setPosition(bucketNeutral); return false;},
-                            drive.actionBuilder(new Pose2d(9,15.5,Math.toRadians(-33)))
+                            drive.actionBuilder(new Pose2d(9.7,13.5,Math.toRadians(-33)))
                                     .waitSeconds(.65)
-                                    .strafeToLinearHeading(new Vector2d(13.7,23.09),Math.toRadians(-9))
+                                    .strafeToLinearHeading(new Vector2d(15.5,23.09),Math.toRadians(-9))
                                     .waitSeconds(.35)
                                     .build(),
                                             (p) -> {HT=900; return false;},
                                             (p) -> {claw.setPosition(clawOpen); return false;},
-                                            drive.actionBuilder(new Pose2d(13.7,23.09,Math.toRadians(-9)))
+                                            drive.actionBuilder(new Pose2d(15.5,23.09,Math.toRadians(-9)))
                                                     .waitSeconds(.3)
                                                     .build(),
                                             (p) -> {wrist.setPosition(wristGrab); return false;},
                                             (p) -> {elbow.setPosition(elbowGrab); return false;},
-                                            drive.actionBuilder(new Pose2d(13.7,23.09,Math.toRadians(-9)))
+                                            drive.actionBuilder(new Pose2d(15.5,23.09,Math.toRadians(-9)))
                                                     .waitSeconds(.5)
                                                     .build(),
                                             (p) -> {claw.setPosition(clawClose); return false;},
-                                            drive.actionBuilder(new Pose2d(13.7,23.09,Math.toRadians(-9)))
+                                            drive.actionBuilder(new Pose2d(15.5,23.09,Math.toRadians(-9)))
                                                     .waitSeconds(.3)
                                                     .build(),
                                             (p) -> {elbow.setPosition(elbowBucket); return false;},
                                             (p) -> {wrist.setPosition(wristBucket); return false;},
-                                            drive.actionBuilder(new Pose2d(13.7,23.09,Math.toRadians(-9)))
+                                            drive.actionBuilder(new Pose2d(15.5,23.09,Math.toRadians(-9)))
                                                     .waitSeconds(.45)
                                                     .build(),
                                             (p) -> {HT = 5; return false;},
-                                            drive.actionBuilder(new Pose2d(13.7,23.09,Math.toRadians(-9)))
+                                            drive.actionBuilder(new Pose2d(15.5,23.09,Math.toRadians(-9)))
                                                     .waitSeconds(.65)
                                                     .build(),
                                             (p) -> {claw.setPosition(clawOpen); return false;},
-                                            drive.actionBuilder(new Pose2d(13.7,23.09,Math.toRadians(-9)))
+                                            drive.actionBuilder(new Pose2d(15.5,23.09,Math.toRadians(-9)))
                                                     .waitSeconds(.3)
                                                     .build(),
                                             (p) -> {elbow.setPosition(elbowNeutral); return false;},
                                             (p) -> {wrist.setPosition(wristNeutral); return false;},
                                             (p) -> {claw.setPosition(clawClose); return false;},//here
-                                            drive.actionBuilder(new Pose2d(13.7,23.09,Math.toRadians(-9)))
+                                            drive.actionBuilder(new Pose2d(15.5,23.09,Math.toRadians(-9)))
                                                     .waitSeconds(.45)
-                                                    .strafeToLinearHeading(new Vector2d(11,15),Math.toRadians(-33))
+                                                    .strafeToLinearHeading(new Vector2d(11.5,15),Math.toRadians(-33))
                                     .build(), //really here
                                             (p) -> {LT=2600; return false;},   //here
-                                            drive.actionBuilder(new Pose2d(11,15,Math.toRadians(-33)))
+                                            drive.actionBuilder(new Pose2d(11.5,15,Math.toRadians(-33)))
                                                     .waitSeconds(1)
                                                     .build(),
                                             (p) -> {bucket.setPosition(bucketScore); return false;},
-                                            drive.actionBuilder(new Pose2d(11,15,Math.toRadians(-33)))
+                                            drive.actionBuilder(new Pose2d(11.5,15,Math.toRadians(-33)))
                                                     .waitSeconds(1)
                                                     .build(),
                                             (p) -> {LT=50; return false;},
                                             (p) -> {bucket.setPosition(bucketNeutral); return false;},
-                                            drive.actionBuilder(new Pose2d(11,15,Math.toRadians(-33)))
+                                            drive.actionBuilder(new Pose2d(11.5,15,Math.toRadians(-33)))
                                                     .waitSeconds(0.55)
                                                     .build(),
                             new ParallelAction(
                                     drive.actionBuilder(new Pose2d(11,15,Math.toRadians(-33)))
-                                            .strafeToLinearHeading(new Vector2d(55,0),Math.toRadians(87))
-                                            .strafeToLinearHeading(new Vector2d(55,-23),Math.toRadians(87))
+                                            .strafeToLinearHeading(new Vector2d(57,0),Math.toRadians(87))
+                                            .strafeToLinearHeading(new Vector2d(57,-23.1),Math.toRadians(87))
                                             .build(),
-                                    (p) -> {LT=1200; return false;}))
+                                    (p) -> {LT=1200; return false;}
+                                    ))
                     ));
 
     }

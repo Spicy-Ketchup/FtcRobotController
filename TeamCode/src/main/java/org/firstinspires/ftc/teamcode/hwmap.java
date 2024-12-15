@@ -30,6 +30,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -76,6 +78,10 @@ public class hwmap
     public Servo wrist = null;
     public Servo elbow = null;
     public Servo bucket = null;
+    public CRServo Spintake1 = null;
+    public CRServo Spintake2 = null;
+    public ColorSensor colorSensor = null;
+    public RevBlinkinLedDriver leftLights, rightLights = null;
 
 
 
@@ -102,53 +108,63 @@ public class hwmap
         batteryVoltageSensor = hwMap.voltageSensor.iterator().next();
 
         // Define and Initialize Motors
-        leftFront  = hwMap.get(DcMotor.class, "lf");
-        rightFront = hwMap.get(DcMotor.class, "rf");
-        leftBack  = hwMap.get(DcMotor.class, "lb");
-        rightBack = hwMap.get(DcMotor.class, "rb");
-        Harm  = hwMap.get(DcMotorEx.class, "harm");
-        LLarm  = hwMap.get(DcMotorEx.class, "ll");
-        LRarm = hwMap.get(DcMotorEx.class, "lr");
+    //    leftFront  = hwMap.get(DcMotor.class, "lf");
+    //    rightFront = hwMap.get(DcMotor.class, "rf");
+     //   leftBack  = hwMap.get(DcMotor.class, "lb");
+     //   rightBack = hwMap.get(DcMotor.class, "rb");
+      //  Harm  = hwMap.get(DcMotorEx.class, "harm");
+      //  LLarm  = hwMap.get(DcMotorEx.class, "ll");
+     //   LRarm = hwMap.get(DcMotorEx.class, "lr");
 
-       claw = hwMap.get(Servo.class, "claw");
-        wrist = hwMap.get(Servo.class, "wrist");
-        elbow = hwMap.get(Servo.class, "elbow");
-        bucket = hwMap.get(Servo.class, "bucket");
+    //   claw = hwMap.get(Servo.class, "claw");
+    //    wrist = hwMap.get(Servo.class, "wrist");
+    //    elbow = hwMap.get(Servo.class, "elbow");
+    //    bucket = hwMap.get(Servo.class, "bucket");
+        Spintake1 = hwMap.get(CRServo.class, "S1");
+        Spintake2 = hwMap.get(CRServo.class, "S2");
 
-        leftFront.setDirection(DcMotor.Direction.REVERSE);
-        rightFront.setDirection(DcMotor.Direction.REVERSE);
-        leftBack.setDirection(DcMotor.Direction.FORWARD);
-        rightBack.setDirection(DcMotor.Direction.REVERSE);
-        Harm.setDirection(DcMotor.Direction.FORWARD);
-        LLarm.setDirection(DcMotor.Direction.FORWARD);
-        LRarm.setDirection(DcMotor.Direction.REVERSE);
+        colorSensor = hwMap.get(ColorSensor.class, "CS");
 
-        bucket.setDirection(Servo.Direction.REVERSE);
+        leftLights = hwMap.get(RevBlinkinLedDriver.class, "LLed");
+        rightLights = hwMap.get(RevBlinkinLedDriver.class, "RLed");
 
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        Harm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        LLarm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        LRarm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        leftFront.setPower(0);
-        rightFront.setPower(0);
-        leftBack.setPower(0);
-        rightBack.setPower(0);
-        Harm.setPower(0);
-        LLarm.setPower(0);
-        LRarm.setPower(0);
+        //  leftFront.setDirection(DcMotor.Direction.REVERSE);
+      //  rightFront.setDirection(DcMotor.Direction.REVERSE);
+      //  leftBack.setDirection(DcMotor.Direction.FORWARD);
+      //  rightBack.setDirection(DcMotor.Direction.REVERSE);
+      //  Harm.setDirection(DcMotor.Direction.FORWARD);
+      //  LLarm.setDirection(DcMotor.Direction.FORWARD);
+      //  LRarm.setDirection(DcMotor.Direction.REVERSE);
+
+        Spintake2.setDirection(CRServo.Direction.REVERSE);
+
+      //  leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+      //  leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+      //  rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+      //  rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+      //  Harm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+      //  LLarm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+      //  LRarm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+      //  leftFront.setPower(0);
+      //  rightFront.setPower(0);
+      //  leftBack.setPower(0);
+      //  rightBack.setPower(0);
+      //  Harm.setPower(0);
+      //  LLarm.setPower(0);
+      //  LRarm.setPower(0);
+        Spintake1.setPower(0);
+        Spintake2.setPower(0);
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Harm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        LLarm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        LRarm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+      //  leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+      //  rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+      //  leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+      //  rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+      //  Harm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+      //  LLarm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+      //  LRarm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
     }

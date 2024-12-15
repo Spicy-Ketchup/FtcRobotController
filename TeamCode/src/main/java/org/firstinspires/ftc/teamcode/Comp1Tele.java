@@ -12,19 +12,30 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="LM1 TeleOp")
-//@Disabled
+@Disabled
 
 public class Comp1Tele extends LinearOpMode {
-
-
     hwmap robot = new hwmap();
 
-    public double speed = 1.0;      //Speed of the robot, either base speed at 1.0 or slow speed at 0.3
+    public double speed = 1;      //Speed of the robot, either base speed at 1.0 or slow speed at 0.3
 
     public static double p = .006, i = 0, d = 0.0;
 
     public static int LiftTarget = 0; // target position
     public static int ClawTarget = 0;
+    double clawOpen = 0.3;
+    double clawClose = 0.7;
+    double wristGrab = 0.55;
+    double wristNeutral = 0.4;
+    double wristBucket = 0;
+    double elbowGrab = 0.147;
+    double elbowNeutral = 0.7;
+    double elbowBucket = 0.82;
+    double bucketScore = 0;
+    double bucketNeutral = 0.9;
+    int liftHigh = 2600;
+    int liftMiddle = 1350;
+    int liftNeutral = 50;
     public PIDController controller;
 
 
@@ -34,56 +45,63 @@ public class Comp1Tele extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         Lift lift = new Lift(hardwareMap);
-        robot.elbow.setPosition(.7);
+        robot.bucket.setPosition(bucketNeutral);
+        robot.elbow.setPosition(elbowNeutral);
+        robot.claw.setPosition(clawClose);
+        robot.wrist.setPosition(wristNeutral);
         waitForStart();
         while (opModeIsActive()) {
 
             telemetry.addData("Status", "Running");
             telemetry.update();
 
+            double leftFrontSpeed =  (-gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x);
+            double rightFrontSpeed = (-gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x);
+            double leftBackSpeed = (-gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x);
+            double rightBackSpeed = (-gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x);
 
-            robot.leftFront.setPower((-gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x) * speed);
-            robot.rightFront.setPower((-gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x) * speed);
-            robot.leftBack.setPower((-gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x) * speed);
-            robot.rightBack.setPower((-gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x) * speed);
-
-         //   speed = gamepad1.a && speed == 1.0 ? .1 : gamepad1.a && speed == .1 ? .1 : speed;
-            telemetry.addData("speed: ", speed);
-
+            robot.rightFront.setPower(rightFrontSpeed);
+            robot.leftFront.setPower(leftFrontSpeed);
+            robot.leftBack.setPower(leftBackSpeed);
+            robot.rightBack.setPower(rightBackSpeed);
 //comment
+
+            if (gamepad1.a){
+                lift.reset();
+            }
   if (gamepad1.dpad_down)
-       LiftTarget = 0;
+       LiftTarget = liftNeutral;
    else if (gamepad1.dpad_right)
-       LiftTarget = 2300;
+       LiftTarget = liftMiddle;
    else if (gamepad1.dpad_up)
-       LiftTarget = 3200;
+       LiftTarget = liftHigh;
 
    if (gamepad2.left_trigger > 0.8){
-       robot.claw.setPosition(.6);
+       robot.claw.setPosition(clawOpen);
    } else if (gamepad2.right_trigger > 0.8){
-       robot.claw.setPosition(1.0);
+       robot.claw.setPosition(clawClose);
    }
-   if (gamepad2.a && robot.elbow.getPosition() > .4)
-       robot.elbow.setPosition(.12);
-   else if (gamepad2.a && robot.elbow.getPosition() < .2)
-       robot.elbow.setPosition(.95);
+   if (gamepad2.a)
+       robot.elbow.setPosition(elbowGrab);
+   else if (gamepad2.x)
+       robot.elbow.setPosition(elbowBucket);
    else if (gamepad2.b)
-       robot.elbow.setPosition(.7);
+       robot.elbow.setPosition(elbowNeutral);
 
 
-   if (gamepad2.x)
-       robot.wrist.setPosition(.9);
-   else if (gamepad2.y)
-        robot.wrist.setPosition(.3);
+   if (gamepad2.dpad_down)
+       robot.wrist.setPosition(wristGrab);
+   else if (gamepad2.dpad_right)
+        robot.wrist.setPosition(wristBucket);
 
    if (gamepad1.left_trigger > .8) {
-       robot.bucket.setPosition(0.1);
+       robot.bucket.setPosition(bucketNeutral);
    } else if (gamepad1.right_trigger> .8){
-       robot.bucket.setPosition(0.8);
+       robot.bucket.setPosition(bucketScore);
    }
 
         if (gamepad2.left_bumper)
-            ClawTarget = -55;
+            ClawTarget = 5;
         else if (gamepad2.right_bumper)
             ClawTarget = 880;
 
@@ -143,6 +161,15 @@ public class Comp1Tele extends LinearOpMode {
                   telemetry.addData("lift power: ", LLPower);
                   telemetry.addData("Lift Pos: ", robot.LLarm.getCurrentPosition());
                   telemetry.addData("Claw Pos: ", robot.Harm.getCurrentPosition());
+                  telemetry.addData("speed divide ", speed);
+                }
+                public void reset(){
+                    robot.LLarm.setPower(-.4);
+                    robot.LRarm.setPower(-.4);
+                    robot.LLarm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    robot.LRarm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    robot.LLarm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    robot.LRarm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 }
              }
         }
