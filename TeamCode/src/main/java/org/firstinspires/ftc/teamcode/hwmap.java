@@ -126,7 +126,7 @@ public class hwmap
         colorSensor = hwMap.get(ColorSensor.class, "CS");
 
         leftLights = hwMap.get(RevBlinkinLedDriver.class, "LLed");
-        rightLights = hwMap.get(RevBlinkinLedDriver.class, "RLed");
+    //    rightLights = hwMap.get(RevBlinkinLedDriver.class, "RLed");
 
 
         //  leftFront.setDirection(DcMotor.Direction.REVERSE);
@@ -137,7 +137,7 @@ public class hwmap
       //  LLarm.setDirection(DcMotor.Direction.FORWARD);
       //  LRarm.setDirection(DcMotor.Direction.REVERSE);
 
-        Spintake2.setDirection(CRServo.Direction.REVERSE);
+        Spintake1.setDirection(CRServo.Direction.REVERSE);
 
       //  leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
       //  leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -156,6 +156,7 @@ public class hwmap
       //  LRarm.setPower(0);
         Spintake1.setPower(0);
         Spintake2.setPower(0);
+        leftLights.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK);
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
       //  leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
